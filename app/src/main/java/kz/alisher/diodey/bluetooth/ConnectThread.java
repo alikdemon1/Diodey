@@ -1,11 +1,14 @@
 package kz.alisher.diodey.bluetooth;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -14,22 +17,24 @@ import java.util.UUID;
  */
 public class ConnectThread extends Thread {
     private BluetoothSocket bTSocket;
+    private ManageData manageData;
 
     public boolean connect(BluetoothDevice bTDevice, UUID mUUID) {
         try {
             bTSocket = bTDevice.createRfcommSocketToServiceRecord(mUUID);
         } catch (IOException e) {
-            Log.d("CONNECT THREAD", "Could not create RFCOMM socket:" + e.toString());
+            Log.d("CONNECTTHREAD","Could not create RFCOMM socket:" + e.toString());
             return false;
         }
         try {
             bTSocket.connect();
-        } catch (IOException e) {
-            Log.d("CONNECT THREAD", "Could not connect: " + e.toString());
+            manageData = new ManageData(bTSocket);
+        } catch(IOException e) {
+            Log.d("CONNECTTHREAD","Could not connect: " + e.toString());
             try {
                 bTSocket.close();
-            } catch (IOException close) {
-                Log.d("CONNECT THREAD", "Could not close connection:" + e.toString());
+            } catch(IOException close) {
+                Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString());
                 return false;
             }
         }
@@ -37,17 +42,18 @@ public class ConnectThread extends Thread {
     }
 
     public void sendData(int data) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream(4);
-        output.write(data);
-        OutputStream outputStream = bTSocket.getOutputStream();
-        outputStream.write(output.toByteArray());
+        manageData.sendData(data);
+    }
+
+    public int recieveData() throws IOException {
+        return manageData.receiveData();
     }
 
     public boolean cancel() {
         try {
             bTSocket.close();
-        } catch (IOException e) {
-            Log.d("CONNECT THREAD", "Could not close connection:" + e.toString());
+        } catch(IOException e) {
+            Log.d("CONNECTTHREAD","Could not close connection:" + e.toString());
             return false;
         }
         return true;

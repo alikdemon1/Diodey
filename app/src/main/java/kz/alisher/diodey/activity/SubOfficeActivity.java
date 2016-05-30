@@ -90,15 +90,11 @@ public class SubOfficeActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
                 if (btDevice == null) {
                     Toast.makeText(SubOfficeActivity.this, "Please choose bluetooth device", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        thread = new ConnectThread();
-                        thread.connect(btDevice, MY_UUID);
                         thread.sendData(progress);
-                        thread.start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -129,26 +125,28 @@ public class SubOfficeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 btDevice = bTAdapter.getRemoteDevice(list.get(position).getAddress());
+                thread = new ConnectThread();
+                thread.connect(btDevice, MY_UUID);
                 Log.d("DEVICE", btDevice.getName() + ", " + btDevice.getAddress());
             }
         });
     }
 
-    public void startDiscovery(){
+    public void startDiscovery() {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(bReciever, filter);
         bTAdapter.startDiscovery();
     }
 
-    public void stopDiscovery(){
+    public void stopDiscovery() {
         unregisterReceiver(bReciever);
         bTAdapter.cancelDiscovery();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("Receiver", "unregister");
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("ON DESTROY", "stop discovery");
         stopDiscovery();
     }
 }
