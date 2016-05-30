@@ -20,8 +20,8 @@
             android:layout_marginLeft="25dp"
             android:layout_marginTop="20dp"
             android:text="Лампа-1"
-            android:textSize="20sp"
             android:textColor="@color/black"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <ImageView
@@ -41,7 +41,6 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:max="20"
-            android:secondaryProgress="10"
             android:paddingBottom="5dp"
             android:progress="10" />
 
@@ -59,9 +58,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/textView" />
+            android:layout_alignTop="@+id/textView"
+            android:layout_marginRight="20dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/paired"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Paired devices:"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+            android:textSize="25sp"/>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/paired"/>
     </RelativeLayout>
 
 
