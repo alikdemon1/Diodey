@@ -95,6 +95,7 @@ public class SubOfficeActivity extends AppCompatActivity {
                 } else {
                     try {
                         thread.sendData(progress);
+                        Toast.makeText(SubOfficeActivity.this, progress+"", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
